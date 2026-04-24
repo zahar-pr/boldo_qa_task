@@ -1,5 +1,23 @@
 # 🎭 Plane.so E2E Automation Showcase
 
+
+
+
+
+
+# Удаляем старый (опционально, но чище)
+rm -f auth/storage_state.json
+
+# Запускаем скрипт — откроется браузер, логинься заново
+python scripts/save_auth_state.py
+
+
+
+
+
+
+
+
 > Python + Playwright + Allure Report — автоматизация E2E тестирования open-source SaaS
 > [Plane.so](https://app.plane.so) (Jira/Linear alternative).
 
