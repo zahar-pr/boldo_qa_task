@@ -11,8 +11,50 @@ python scripts/save_auth_state.py
 pytest -v
 
 
+
+rm -f auth/storage_state.json
+python scripts/save_auth_state.py
+pkill -f "/opt/google/chrome" 2>/dev/null
+sudo swapoff -a && sudo swapon -a
+free -h
+pytest tests/project/ -v
+
+
+HEADLESS=false pytest tests/project/test_project.py::TestProject::test_tc009_create_project_with_full_data -v
+
+
 pytest tests/workspace/ -v
 pytest -v
+
+
+pkill -f "/opt/google/chrome" 2>/dev/null
+sudo swapoff -a && sudo swapon -a
+free -h
+pytest tests/project/test_project.py::TestProject::test_tc009_create_project_with_full_data -v
+
+
+
+
+pkill -f "/opt/google/chrome" 2>/dev/null
+sudo swapoff -a && sudo swapon -a
+free -h
+rm -f auth/storage_state.json
+python scripts/save_auth_state.py
+# Этап 5.3
+pytest tests/project/ -v
+# Этап 5.4
+pytest tests/issues/ -v
+# Этап 5.5
+pytest tests/views/ -v
+# Этап 5.6
+pytest tests/cycles/ -v
+# Этап 5.7
+pytest tests/pages/ -v
+# Smoke suite
+pytest -m "smoke and not serial" -v
+# Полный прогон
+pytest -v
+
 
 
 
