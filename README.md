@@ -4,15 +4,15 @@
 
 
 
-
-# Удаляем старый (опционально, но чище)
+pkill -f "/opt/google/chrome" 2>/dev/null
+sudo swapoff -a && sudo swapon -a
 rm -f auth/storage_state.json
-
-# Запускаем скрипт — откроется браузер, логинься заново
 python scripts/save_auth_state.py
+pytest -v
 
 
-
+pytest tests/workspace/ -v
+pytest -v
 
 
 

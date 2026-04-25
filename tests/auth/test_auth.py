@@ -43,27 +43,30 @@ class TestAuth:
     # ---------------------------------------------------------------
     # TC-002: Malformed email validation
     # ---------------------------------------------------------------
-    @allure.story("Login with malformed email shows validation error")
+    @allure.story("Login with malformed email keeps Continue button disabled")
     @allure.severity(allure.severity_level.CRITICAL)
     @pytest.mark.auth
     @pytest.mark.critical
     def test_tc002_malformed_email_blocks_submit(
-        self, unauthenticated_page: Page, step_logger: StepLogger
+            self, unauthenticated_page: Page, step_logger: StepLogger
     ) -> None:
+        """Plane валидирует email на клиенте и держит Continue disabled,
+        пока email не валиден по шаблону."""
         login = LoginPage(unauthenticated_page, step_logger)
         login.open()
 
         with allure.step("Fill invalid email 'abc-not-an-email'"):
             login.fill_email("abc-not-an-email")
+            unauthenticated_page.keyboard.press("Tab")  # blur-триггер
 
-        with allure.step("Verify we stay on login (no OTP screen)"):
-            # HTML5 валидация type="email" не даст сабмитить — URL не меняется,
-            # OTP-поле не появляется. Проверяем оба условия.
-            login.click_continue()
-            # Небольшое ожидание на случай анимации
-            unauthenticated_page.wait_for_timeout(500)
+        with allure.step("Assert Continue button is disabled"):
+            login.assert_continue_button_disabled()
+
+        with allure.step("Assert OTP screen is NOT shown"):
             expect(login.otp_input).not_to_be_visible()
-            step_logger.assertion("OTP screen NOT shown for invalid email", passed=True)
+            step_logger.assertion(
+                "OTP screen NOT shown for invalid email", passed=True
+            )
 
     # ---------------------------------------------------------------
     # TC-003: Empty email — Continue disabled
@@ -119,6 +122,7 @@ class TestAuth:
     @pytest.mark.smoke
     @pytest.mark.auth
     @pytest.mark.critical
+    @pytest.mark.serial
     def test_tc005_logout_clears_session(
         self, isolated_authenticated_page: Page, step_logger: StepLogger
     ) -> None:

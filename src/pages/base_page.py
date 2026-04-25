@@ -84,10 +84,12 @@ class BasePage:
     # ------------------------------------------------------------------
     # Assertions (с логированием + auto-screenshot при падении)
     # ------------------------------------------------------------------
-    def assert_visible(self, locator: Locator, name: str = "element") -> None:
-        """Assert что элемент виден. При падении — скриншот + HTML в Allure."""
+    def assert_visible(
+            self, locator: Locator, name: str = "element", timeout: int = 15_000
+    ) -> None:
+        """Assert что элемент виден. Timeout 15s по умолчанию для медленных SPA."""
         try:
-            expect(locator).to_be_visible()
+            expect(locator).to_be_visible(timeout=timeout)
             self.log.assertion(f"{name} is visible", passed=True)
         except AssertionError:
             self.log.assertion(f"{name} is visible", passed=False)
