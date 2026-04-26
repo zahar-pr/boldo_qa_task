@@ -11,7 +11,7 @@
 [![Tests](https://img.shields.io/badge/tests-30%20passed-success)](https://zahar-pr.github.io/boldo_qa_task/)
 [![License](https://img.shields.io/badge/license-MIT-lightgrey)](./LICENSE)
 
-📊 **Live dashboard:** [zahar-pr.github.io/boldo_qa_task](https://zahar-pr.github.io/boldo_qa_task/)
+📊 **Live dashboard:** 
 
 </div>
 
