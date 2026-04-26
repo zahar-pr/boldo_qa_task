@@ -1,14 +1,8 @@
-"""Issues test suite — TC-013..TC-018.
-
-Из-за нестабильности Chromium на странице проекта используется
-workspace-уровень: проверяется доступность связанных URL и UI без
-ухода в тяжёлый рендер проекта.
-"""
 from __future__ import annotations
 
 import allure
 import pytest
-from playwright.sync_api import Page, expect
+from playwright.sync_api import Page
 
 from src.helpers.config import settings
 from src.helpers.logger import StepLogger
@@ -23,7 +17,7 @@ class TestIssues:
     @pytest.mark.issues
     @pytest.mark.critical
     def test_tc013_workspace_issues_overview(
-        self, authenticated_page: Page, step_logger: StepLogger
+            self, authenticated_page: Page, step_logger: StepLogger
     ) -> None:
         """Workspace-level страница со списком всех work items."""
         with allure.step("Navigate to workspace issues overview"):
@@ -84,16 +78,11 @@ class TestIssues:
             f"Expected at least 2 issue-related sections, got: {reachable}"
         )
 
-
-
-
-
-
     @allure.story("Workspace views section accessible (issues filters)")
     @allure.severity(allure.severity_level.NORMAL)
     @pytest.mark.issues
     def test_tc015_workspace_views_accessible(
-        self, authenticated_page: Page, step_logger: StepLogger
+            self, authenticated_page: Page, step_logger: StepLogger
     ) -> None:
         """Workspace views = пользовательские фильтры на issues."""
         with allure.step("Open workspace views"):
@@ -113,7 +102,7 @@ class TestIssues:
     @allure.severity(allure.severity_level.NORMAL)
     @pytest.mark.issues
     def test_tc016_workspace_cycles_overview(
-        self, authenticated_page: Page, step_logger: StepLogger
+            self, authenticated_page: Page, step_logger: StepLogger
     ) -> None:
         """Cycles — это группировки issues по спринтам."""
         with allure.step("Open workspace cycles"):
@@ -133,7 +122,7 @@ class TestIssues:
     @allure.severity(allure.severity_level.NORMAL)
     @pytest.mark.issues
     def test_tc017_active_cycles_section(
-        self, authenticated_page: Page, step_logger: StepLogger
+            self, authenticated_page: Page, step_logger: StepLogger
     ) -> None:
         """Active cycles — текущие спринты со списком issues."""
         with allure.step("Open active cycles"):
@@ -152,15 +141,13 @@ class TestIssues:
             )
             assert ok
 
-
     @allure.story("Workspace dashboard / home accessible")
     @allure.severity(allure.severity_level.NORMAL)
     @pytest.mark.issues
     def test_tc018_workspace_home_overview(
             self, authenticated_page: Page, step_logger: StepLogger
     ) -> None:
-        """Главная страница workspace должна открываться (Plane может
-        редиректить на /projects, /your-work и др. — любой не-404 ок)."""
+        """/projects, /your-work и др. — любой не-404 ок)."""
         with allure.step("Open workspace home"):
             url = f"{settings.base_url}/{settings.plane_workspace_slug}"
             authenticated_page.goto(url, wait_until="domcontentloaded")

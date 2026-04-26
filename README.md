@@ -2,6 +2,15 @@
 
 
 
+![CI](https://github.com/zahar-pr/boldo_qa_task/actions/workflows/tests.yml/badge.svg)
+![Allure](https://img.shields.io/badge/Allure-Report-blue?logo=qmeta)
+![Python](https://img.shields.io/badge/python-3.10-blue?logo=python)
+![Playwright](https://img.shields.io/badge/Playwright-1.49-2EAD33?logo=playwright)
+![Tests](https://img.shields.io/badge/tests-30%20passed-success)
+
+**📊 Live Allure Report:** https://zahar-pr.github.io/boldo_qa_task/
+
+
 
 
 pkill -f "/opt/google/chrome" 2>/dev/null
