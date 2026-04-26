@@ -301,9 +301,3 @@ python scripts/save_auth_state.py
 base64 -w 0 auth/storage_state.json
 # Copy the output into the STORAGE_STATE_B64 GitHub Secret
 ```
-
----
-
-## 📝 License
-
-MIT — free for commercial and open-source projects.
