@@ -9,7 +9,6 @@
 [![Python](https://img.shields.io/badge/python-3.10+-blue?logo=python&logoColor=white)](https://www.python.org/)
 [![Playwright](https://img.shields.io/badge/Playwright-1.49-2EAD33?logo=playwright&logoColor=white)](https://playwright.dev/python/)
 [![Tests](https://img.shields.io/badge/tests-30%20passed-success)](https://zahar-pr.github.io/boldo_qa_task/)
-[![License](https://img.shields.io/badge/license-MIT-lightgrey)](./LICENSE)
 
 📊 **Live dashboard:** 
 
