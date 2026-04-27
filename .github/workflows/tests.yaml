@@ -73,20 +73,21 @@ jobs:
           PLANE_EMAIL: ${{ secrets.PLANE_EMAIL }}
           PLANE_WORKSPACE_SLUG: ${{ secrets.PLANE_WORKSPACE_SLUG }}
         run: |
-          # Проверка что секреты не пустые
+          # Fail fast if any secret is missing
           if [ -z "$BASE_URL" ]; then
-            echo "::error::BASE_URL secret is empty or not set"
+            echo "::error::Secret BASE_URL is empty or not set"
             exit 1
           fi
           if [ -z "$PLANE_EMAIL" ]; then
-            echo "::error::PLANE_EMAIL secret is empty or not set"
+            echo "::error::Secret PLANE_EMAIL is empty or not set"
             exit 1
           fi
           if [ -z "$PLANE_WORKSPACE_SLUG" ]; then
-            echo "::error::PLANE_WORKSPACE_SLUG secret is empty or not set"
+            echo "::error::Secret PLANE_WORKSPACE_SLUG is empty or not set"
             exit 1
           fi
 
+          # Write .env
           cat > .env <<EOF
           BASE_URL=${BASE_URL}
           PLANE_EMAIL=${PLANE_EMAIL}
@@ -97,30 +98,45 @@ jobs:
           STORAGE_STATE_PATH=auth/storage_state.json
           EOF
 
-          echo "✅ .env created. Contents (without sensitive data):"
-          # Маскируем email — выводим только домен, чтобы убедиться что значение есть
+          echo "✅ .env created"
+          # Show contents (mask email)
           grep -v "^PLANE_EMAIL" .env
           echo "PLANE_EMAIL=***@$(echo "$PLANE_EMAIL" | cut -d'@' -f2)"
 
-          # Проверка что pydantic-settings видит .env
+          # Verify pydantic-settings can read it
           python -c "
           import sys
           sys.path.insert(0, '.')
           from src.helpers.config import settings
           print(f'Loaded base_url: {settings.base_url!r}')
           print(f'Loaded workspace_slug: {settings.plane_workspace_slug!r}')
-          assert settings.base_url.startswith('http'), 'base_url not loaded from .env'
+          assert settings.base_url.startswith('http'), f'base_url is invalid: {settings.base_url!r}'
+          assert settings.plane_workspace_slug, 'workspace_slug is empty'
           print('✅ Settings load correctly')
           "
 
 
 
-
       - name: Run pytest
         env:
-          HEADLESS: true
+          HEADLESS: 'true'
+          BASE_URL: ${{ secrets.BASE_URL }}
+          PLANE_EMAIL: ${{ secrets.PLANE_EMAIL }}
+          PLANE_WORKSPACE_SLUG: ${{ secrets.PLANE_WORKSPACE_SLUG }}
+          DEFAULT_TIMEOUT: '15000'
+          NAVIGATION_TIMEOUT: '45000'
+          STORAGE_STATE_PATH: 'auth/storage_state.json'
         run: |
+          # Sanity check: env-vars actually present in the process
+          python -c "
+          import os
+          print('BASE_URL =', repr(os.getenv('BASE_URL', '')))
+          print('PLANE_WORKSPACE_SLUG =', repr(os.getenv('PLANE_WORKSPACE_SLUG', '')))
+          assert os.getenv('BASE_URL', '').startswith('http'), 'BASE_URL is empty in CI'
+          "
           python -m pytest -v --alluredir=allure-results
+
+
 
       - name: Upload Allure results
         if: always()
