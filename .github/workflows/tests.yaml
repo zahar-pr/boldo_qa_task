@@ -35,14 +35,37 @@ jobs:
         run: |
           python -m playwright install --with-deps chromium
 
+
       - name: Restore storage_state from secret
         env:
           STORAGE_B64: ${{ secrets.STORAGE_STATE_B64 }}
         run: |
           mkdir -p auth
-          echo "$STORAGE_B64" | base64 --decode > auth/storage_state.json
-          # Проверка что файл валидный JSON
-          python -c "import json; json.load(open('auth/storage_state.json')); print('storage_state.json valid')"
+          echo "Secret length: ${#STORAGE_B64}"
+          if [ -z "$STORAGE_B64" ]; then
+            echo "::error::STORAGE_STATE_B64 secret is empty or not set"
+            exit 1
+          fi
+
+          echo "$STORAGE_B64" | base64 -d > auth/storage_state.json
+          ls -la auth/storage_state.json
+
+          python -c "
+          import json, sys
+          try:
+              data = json.load(open('auth/storage_state.json'))
+              cookies = len(data.get('cookies', []))
+              origins = len(data.get('origins', []))
+              print(f'✅ Valid JSON. Cookies: {cookies}, Origins: {origins}')
+              if cookies == 0:
+                  print('::warning::No cookies in storage_state — auth will fail')
+          except Exception as e:
+              print(f'::error::Invalid JSON: {e}')
+              with open('auth/storage_state.json') as f:
+                  print(f'First 200 chars: {repr(f.read()[:200])}')
+              sys.exit(1)
+          "
+
 
       - name: Create .env from secrets
         env:
