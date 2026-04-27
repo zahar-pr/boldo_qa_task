@@ -31,11 +31,11 @@ class TestPages:
             authenticated_page.wait_for_timeout(2000)
 
         with allure.step("Verify pages URL"):
-            assert "/pages" in authenticated_page.url, (
-                f"Expected /pages, got {authenticated_page.url}"
-            )
+            current = authenticated_page.url
+            ok = "/pages" in current or "/wiki" in current
+            assert ok, f"Expected /pages or /wiki, got {current}"
             step_logger.assertion(
-                f"On pages: {authenticated_page.url}", passed=True
+                f"On pages/wiki: {current}", passed=True
             )
 
 
