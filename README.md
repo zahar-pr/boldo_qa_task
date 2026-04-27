@@ -5,10 +5,12 @@
 **Production-grade regression testing for the open-source SaaS Plane**
 *Python · Playwright · Allure · GitHub Actions*
 
-[![Allure Report](https://img.shields.io/badge/Allure-Report-blue?logo=qmeta&logoColor=white)](https://zahar-pr.github.io/boldo_qa_task/)
+
+[![Allure Report](https://img.shields.io/badge/Allure-Report-blue?logo=qmeta&logoColor=white)]
+https://zahar-pr.github.io/boldo_qa_task/
 [![Python](https://img.shields.io/badge/python-3.10+-blue?logo=python&logoColor=white)](https://www.python.org/)
 [![Playwright](https://img.shields.io/badge/Playwright-1.49-2EAD33?logo=playwright&logoColor=white)](https://playwright.dev/python/)
-[![CI](https://github.com/zahar-pr/boldo_qa_task/actions/workflows/tests.yaml/badge.svg)](https://github.com/zahar-pr/boldo_qa_task/actions/workflows/tests.yaml)📊 **Live dashboard:**
+[![CI](https://github.com/zahar-pr/boldo_qa_task/actions/workflows/tests.yaml/badge.svg)](https://github.com/zahar-pr/boldo_qa_task/actions/workflows/tests.yaml)
 
 </div>
 

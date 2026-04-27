@@ -6,7 +6,7 @@ Provides isolated_authenticated_page used by destructive tests
 """
 from __future__ import annotations
 
-from typing import Any, Generator
+from typing import Generator
 
 import pytest
 from playwright.sync_api import Browser, Page
@@ -16,7 +16,7 @@ from src.helpers.config import settings
 
 @pytest.fixture
 def isolated_authenticated_page(
-    browser: Browser,
+        browser: Browser,
 ) -> Generator[Page, None, None]:
     if not settings.storage_state_full_path.exists():
         pytest.fail(
