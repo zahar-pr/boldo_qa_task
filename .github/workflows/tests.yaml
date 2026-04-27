@@ -73,6 +73,20 @@ jobs:
           PLANE_EMAIL: ${{ secrets.PLANE_EMAIL }}
           PLANE_WORKSPACE_SLUG: ${{ secrets.PLANE_WORKSPACE_SLUG }}
         run: |
+          # Проверка что секреты не пустые
+          if [ -z "$BASE_URL" ]; then
+            echo "::error::BASE_URL secret is empty or not set"
+            exit 1
+          fi
+          if [ -z "$PLANE_EMAIL" ]; then
+            echo "::error::PLANE_EMAIL secret is empty or not set"
+            exit 1
+          fi
+          if [ -z "$PLANE_WORKSPACE_SLUG" ]; then
+            echo "::error::PLANE_WORKSPACE_SLUG secret is empty or not set"
+            exit 1
+          fi
+
           cat > .env <<EOF
           BASE_URL=${BASE_URL}
           PLANE_EMAIL=${PLANE_EMAIL}
@@ -82,6 +96,25 @@ jobs:
           NAVIGATION_TIMEOUT=45000
           STORAGE_STATE_PATH=auth/storage_state.json
           EOF
+
+          echo "✅ .env created. Contents (without sensitive data):"
+          # Маскируем email — выводим только домен, чтобы убедиться что значение есть
+          grep -v "^PLANE_EMAIL" .env
+          echo "PLANE_EMAIL=***@$(echo "$PLANE_EMAIL" | cut -d'@' -f2)"
+
+          # Проверка что pydantic-settings видит .env
+          python -c "
+          import sys
+          sys.path.insert(0, '.')
+          from src.helpers.config import settings
+          print(f'Loaded base_url: {settings.base_url!r}')
+          print(f'Loaded workspace_slug: {settings.plane_workspace_slug!r}')
+          assert settings.base_url.startswith('http'), 'base_url not loaded from .env'
+          print('✅ Settings load correctly')
+          "
+
+
+
 
       - name: Run pytest
         env:
