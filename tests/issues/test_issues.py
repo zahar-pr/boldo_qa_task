@@ -1,3 +1,10 @@
+"""
+Issues / Work Items test suite (TC-013..TC-018).
+
+Verifies workspace overview, issue-related navigation sections,
+views, cycles and the workspace home dashboard reachability.
+"""
+
 from __future__ import annotations
 
 import allure
@@ -19,7 +26,6 @@ class TestIssues:
     def test_tc013_workspace_issues_overview(
             self, authenticated_page: Page, step_logger: StepLogger
     ) -> None:
-        """Workspace-level страница со списком всех work items."""
         with allure.step("Navigate to workspace issues overview"):
             url = (
                 f"{settings.base_url}/{settings.plane_workspace_slug}"
@@ -30,7 +36,6 @@ class TestIssues:
 
         with allure.step("Verify URL is reachable (your-work or fallback)"):
             current = authenticated_page.url
-            # Plane может редиректить на /your-work/assigned или /workspace-views/all-issues
             ok = any(
                 p in current.lower()
                 for p in ("your-work", "issues", "workspace-views", "/projects")
@@ -47,8 +52,6 @@ class TestIssues:
     def test_tc014_navigation_has_issue_sections(
             self, authenticated_page: Page, step_logger: StepLogger
     ) -> None:
-        """В workspace навигации должны быть разделы для работы с issues:
-        cycles, views, projects. Проверяем доступность ключевых URL."""
         base = f"{settings.base_url}/{settings.plane_workspace_slug}"
         sections_to_check = [
             ("/projects", "projects"),
@@ -84,7 +87,6 @@ class TestIssues:
     def test_tc015_workspace_views_accessible(
             self, authenticated_page: Page, step_logger: StepLogger
     ) -> None:
-        """Workspace views = пользовательские фильтры на issues."""
         with allure.step("Open workspace views"):
             url = (
                 f"{settings.base_url}/{settings.plane_workspace_slug}/views"
@@ -104,7 +106,6 @@ class TestIssues:
     def test_tc016_workspace_cycles_overview(
             self, authenticated_page: Page, step_logger: StepLogger
     ) -> None:
-        """Cycles — это группировки issues по спринтам."""
         with allure.step("Open workspace cycles"):
             url = (
                 f"{settings.base_url}/{settings.plane_workspace_slug}/cycles"
@@ -124,7 +125,6 @@ class TestIssues:
     def test_tc017_active_cycles_section(
             self, authenticated_page: Page, step_logger: StepLogger
     ) -> None:
-        """Active cycles — текущие спринты со списком issues."""
         with allure.step("Open active cycles"):
             url = (
                 f"{settings.base_url}/{settings.plane_workspace_slug}"
@@ -147,7 +147,6 @@ class TestIssues:
     def test_tc018_workspace_home_overview(
             self, authenticated_page: Page, step_logger: StepLogger
     ) -> None:
-        """/projects, /your-work и др. — любой не-404 ок)."""
         with allure.step("Open workspace home"):
             url = f"{settings.base_url}/{settings.plane_workspace_slug}"
             authenticated_page.goto(url, wait_until="domcontentloaded")
@@ -163,14 +162,10 @@ class TestIssues:
             assert ok, f"Workspace slug not in URL: {current}"
 
         with allure.step("Verify page has rendered (any visible element)"):
-            # Не закладываемся на конкретное число кнопок — проверяем что
-            # вообще что-то на странице есть (любой <a>, <button>, <div>).
             visible_anything = authenticated_page.locator(
                 "a:visible, button:visible, [role='button']:visible"
             ).count()
             step_logger.info(f"Visible interactive elements: {visible_anything}")
-            # Даже если ноль — достаточно что URL подгрузился без ошибки.
-            # Этот ассерт скорее информативный.
             step_logger.assertion(
                 f"Page rendered ({visible_anything} interactive elements)",
                 passed=True,

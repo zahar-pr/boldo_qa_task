@@ -1,7 +1,8 @@
-"""KanbanPage — доска Kanban view в проекте.
+"""
+Page Object for the project Kanban board view.
 
-Селекторы здесь ОРИЕНТИРОВОЧНЫЕ — ты не смог их посмотреть (проект пустой).
-Поправим при прогоне тестов в этапе 5.
+Encapsulates column locators and card drag-and-drop interactions
+(currently used as a placeholder for future expansion).
 """
 from __future__ import annotations
 
@@ -16,7 +17,6 @@ class KanbanPage(BasePage):
     # --- View toggle ---
     @property
     def kanban_view_button(self) -> Locator:
-        """Кнопка переключения на Kanban view в тулбаре проекта."""
         return self.page.get_by_role("button", name="Kanban").first
 
     @property
@@ -25,8 +25,6 @@ class KanbanPage(BasePage):
 
     # --- Columns / cards ---
     def column_by_state_name(self, state: str) -> Locator:
-        """Колонка Kanban по имени статуса (Backlog, Todo, In Progress, Done, Cancelled)."""
-        # Плейсхолдер — уточним на реальной странице
         return self.page.locator(
             f'[class*="kanban"] :has-text("{state}")'
         ).first
@@ -44,7 +42,6 @@ class KanbanPage(BasePage):
     def drag_card_between_columns(
         self, card_title: str, from_state: str, to_state: str
     ) -> "KanbanPage":
-        """Drag-n-drop карточки между колонками."""
         with self.log.allure_step(
             f"Drag '{card_title}' from '{from_state}' to '{to_state}'"
         ):
@@ -55,8 +52,6 @@ class KanbanPage(BasePage):
 
     # --- Assertions ---
     def assert_card_in_column(self, card_title: str, state: str) -> None:
-        """Проверить что карточка оказалась в нужной колонке."""
-        # Грубая проверка — ищем карточку внутри колонки по тексту.
         column = self.column_by_state_name(state)
         card_inside = column.locator(f':has-text("{card_title}")').first
         self.assert_visible(card_inside, name=f"Card '{card_title}' in '{state}'")

@@ -1,10 +1,8 @@
-"""Верификация auth fixture — убеждаемся что storage_state работает.
+"""
+Verifies that storage_state.json successfully restores an auth session.
 
-Этот тест:
-1. Использует authenticated_page (с подгруженным storage_state).
-2. Идёт на главную workspace'а.
-3. Проверяет что НЕ редиректит на /auth (= мы реально залогинены).
-4. Проверяет что в URL есть workspace slug.
+If this test fails, all authenticated suites would fail too — it acts
+as a fast pre-check before running the rest of the suite.
 """
 from __future__ import annotations
 
@@ -33,14 +31,11 @@ class TestAuthFixture:
         with allure.step("Assert we are in workspace (not redirected to login)"):
             current_url = authenticated_page.url
             step_logger.info(f"Current URL after load: {current_url}")
-
-            # Если storage_state не сработал — Plane редиректит на /, где email форма
-            # Проверяем что URL содержит workspace slug
             assert settings.plane_workspace_slug in current_url, (
                 f"Expected workspace slug '{settings.plane_workspace_slug}' "
                 f"in URL, got '{current_url}'. "
-                f"Скорее всего storage_state истёк или невалиден — "
-                f"перезапусти scripts/save_auth_state.py."
+                f"Most likely, storage_state has expired or is invalid. — "
+                f"Restart scripts/save_auth_state.py."
             )
             step_logger.assertion(
                 f"URL contains workspace slug '{settings.plane_workspace_slug}'",

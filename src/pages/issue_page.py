@@ -1,9 +1,8 @@
-"""IssuePage — создание и редактирование work items (issues) в проекте.
+"""
+Page Object for the work item (issue) creation modal.
 
-Особенность Plane:
-- В ПУСТОМ проекте кнопка первой задачи: "Create your first work item".
-- В НЕпустом проекте — отдельная кнопка "+ New work item" / "Create" в тулбаре.
-Делаем универсальный метод, который пробует обе опции.
+Wraps the title input, ProseMirror description editor and Save button
+selectors used by the issues test suite.
 """
 from __future__ import annotations
 
@@ -14,37 +13,30 @@ from src.pages.base_page import BasePage
 
 
 class IssuePage(BasePage):
-    # Страница проекта — URL формируется динамически,
-    # сюда приходим уже из ProjectPage. Поле url не используется напрямую.
     url = ""
 
-    # --- Create issue triggers (fallback-логика) ---
+    # --- Create issue triggers (fallback-logic) ---
     @property
     def create_first_work_item_button(self) -> Locator:
         return self.page.get_by_role("button", name="Create your first work item")
 
     @property
     def new_work_item_button(self) -> Locator:
-        """Кнопка в проекте с существующими задачами.
-        Селектор ориентировочный — проверим в этапе 5."""
         return self.page.get_by_role("button", name="New work item").first
 
     # --- Create issue modal ---
     @property
     def issue_title_input(self) -> Locator:
-        """Input Title в модалке создания issue."""
         return self.page.locator('input[name="name"][placeholder="Title"]')
 
     @property
     def issue_description_editor(self) -> Locator:
-        """TipTap/ProseMirror редактор — это contenteditable div, не textarea."""
         return self.page.locator(
             '#issue-modal-editor div[contenteditable="true"]'
         )
 
     @property
     def issue_save_button(self) -> Locator:
-        """Кнопка Save в модалке создания issue."""
         return self.page.get_by_role("button", name="Save")
 
     @property
@@ -57,9 +49,7 @@ class IssuePage(BasePage):
 
     # --- Actions ---
     def click_create_issue(self) -> "IssuePage":
-        """Кликнуть кнопку создания задачи (универсальная логика)."""
         with self.log.allure_step("Click create-issue trigger"):
-            # Пробуем первую опцию (пустой проект)
             first_btn = self.create_first_work_item_button
             if first_btn.is_visible():
                 first_btn.click()
@@ -75,8 +65,6 @@ class IssuePage(BasePage):
 
         if data.description:
             with self.log.allure_step("Fill issue description"):
-                # ProseMirror не принимает .fill() напрямую —
-                # используем click + type.
                 self.issue_description_editor.click()
                 self.issue_description_editor.type(data.description)
         return self

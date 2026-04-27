@@ -1,9 +1,8 @@
-"""Конфигурация проекта. Читает .env или переменные окружения.
+"""
+Typed application settings loaded from .env via pydantic-settings.
 
-Plane использует passwordless-auth (OTP на email), поэтому password-поля нет.
-Для E2E тестов используется storage_state (session reuse): один раз логинимся
-руками, сохраняем cookies+localStorage в файл, дальше все тесты стартуют
-уже залогиненными.
+Provides fail-fast validation on startup and resolved paths for
+storage_state and other runtime artifacts.
 """
 from __future__ import annotations
 

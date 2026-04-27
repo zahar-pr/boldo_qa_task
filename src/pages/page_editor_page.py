@@ -1,4 +1,9 @@
-"""PageEditorPage — wiki-страницы (Pages) в workspace/проекте."""
+"""
+Page Object for the workspace Pages (wiki) editor.
+
+Covers the document list, Add Page control and rich-text editor area
+used by the pages test suite.
+"""
 from __future__ import annotations
 
 from playwright.sync_api import Locator
@@ -20,14 +25,12 @@ class PageEditorPage(BasePage):
 
     @property
     def page_title_input(self) -> Locator:
-        """Заголовок страницы — обычно это contenteditable h1."""
         return self.page.locator(
             'input[placeholder*="Title"], [contenteditable="true"]'
         ).first
 
     @property
     def page_content_editor(self) -> Locator:
-        """Тело страницы (TipTap editor)."""
         return self.page.locator('[contenteditable="true"]').nth(1)
 
     def open_pages(self) -> "PageEditorPage":
@@ -50,7 +53,6 @@ class PageEditorPage(BasePage):
                 self.page_content_editor.click()
                 self.page_content_editor.type(data.content)
 
-        # Plane автосохраняет страницы — явный submit не нужен.
         self.page.wait_for_load_state("domcontentloaded")
         return self
 

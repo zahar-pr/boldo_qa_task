@@ -1,2 +1,1 @@
-"""Локальный conftest для workspace-тестов. Пока пустой — фикстуры
-будут добавляться по мере необходимости."""
+"""Workspace-suite fixtures (currently empty placeholder)."""

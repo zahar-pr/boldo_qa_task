@@ -1,5 +1,8 @@
-"""Smoke-тест Page Objects — проверяем что всё импортируется и создаётся.
-Никаких действий с UI — только instantiation.
+"""
+Import-time check that every Page Object class instantiates cleanly.
+
+Catches regressions where a page module is broken syntactically or has
+missing imports — runs before functional suites.
 """
 from __future__ import annotations
 
@@ -23,10 +26,7 @@ def fake_logger() -> StepLogger:
 
 
 class TestPageObjectsImportable:
-    """Проверяем что все POM корректно импортируются."""
-
     def test_all_pages_import(self, fake_logger: StepLogger, page) -> None:
-        # Создаём инстанс каждого POM — проверяем что __init__ работает.
         pages = [
             BasePage(page, fake_logger),
             LoginPage(page, fake_logger),

@@ -8,9 +8,7 @@
 [![Allure Report](https://img.shields.io/badge/Allure-Report-blue?logo=qmeta&logoColor=white)](https://zahar-pr.github.io/boldo_qa_task/)
 [![Python](https://img.shields.io/badge/python-3.10+-blue?logo=python&logoColor=white)](https://www.python.org/)
 [![Playwright](https://img.shields.io/badge/Playwright-1.49-2EAD33?logo=playwright&logoColor=white)](https://playwright.dev/python/)
-[![Tests](https://img.shields.io/badge/tests-30%20passed-success)](https://zahar-pr.github.io/boldo_qa_task/)
-
-📊 **Live dashboard:** 
+[![CI](https://github.com/zahar-pr/boldo_qa_task/actions/workflows/tests.yaml/badge.svg)](https://github.com/zahar-pr/boldo_qa_task/actions/workflows/tests.yaml)📊 **Live dashboard:**
 
 </div>
 
@@ -69,7 +67,7 @@ Plus **6 infrastructure tests** (config, logger, page-object instantiation, auth
 boldo_qa_task/
 ├── conftest.py                          # Global fixtures
 ├── pytest.ini                           # Markers, allure config
-├── requirements-dev.txt                 # Pinned dependency versions
+├── requirements.txt                 # Pinned dependency versions
 │
 ├── src/
 │   ├── pages/                           # Page Object Model
@@ -198,7 +196,7 @@ cd boldo_qa_task
 python3 -m venv .venv
 source .venv/bin/activate
 
-pip install -r requirements-dev.txt
+pip install -r requirements.txt
 playwright install --with-deps chromium
 
 cp .env.example .env

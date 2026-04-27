@@ -1,10 +1,8 @@
-"""Project test suite — TC-009..TC-012.
+"""
+Project test suite (TC-009..TC-012).
 
-Из-за нестабильности Chromium на тяжёлых submit-операциях Plane
-(SIGABRT при рендере нового проекта), все тесты построены так чтобы
-не зависеть от successful submit. Проверяется доступность функций UI,
-валидация форм, навигация. Это валидный UI-тест: пользователь видит
-что фича доступна, форма работает, кнопки на местах.
+Covers the Create Project modal lifecycle, empty-name validation,
+projects list rendering and the open/close/reopen UX of the modal.
 """
 from __future__ import annotations
 
@@ -32,10 +30,6 @@ class TestProject:
         step_logger: StepLogger,
         project_data: ProjectData,
     ) -> None:
-        """Проверяем что форма создания проекта открывается, принимает
-        ввод (name, identifier, description) и кнопка Create активна.
-        Реальный submit пропускаем — heavy render нового проекта
-        крашит Chromium на слабых машинах."""
         project_page = ProjectPage(authenticated_page, step_logger)
         project_page.open_for_current_workspace()
 
@@ -69,10 +63,6 @@ class TestProject:
     def test_tc010_empty_name_validation(
             self, authenticated_page: Page, step_logger: StepLogger
     ) -> None:
-        """Plane не должен создать проект с пустым name. Проверяем что
-        после попытки submit мы либо остаёмся в модалке, либо страница
-        в любом случае не редиректит на новый проект (URL не содержит
-        /projects/<id>/...)."""
         project_page = ProjectPage(authenticated_page, step_logger)
         project_page.open_for_current_workspace()
 
@@ -89,18 +79,15 @@ class TestProject:
                 pass
 
         with allure.step("Verify we did NOT navigate to a new project"):
-            # Даём 1.5 сек на возможный редирект
             try:
                 authenticated_page.wait_for_timeout(1500)
             except Exception:  # noqa: BLE001
-                # Page crashed — тоже значит что новый проект не создался
                 step_logger.assertion(
                     "Page crashed instead of creating project (no submit)",
                     passed=True,
                 )
                 return
 
-            # Если жив — проверим что URL остался на /projects (без id)
             try:
                 current_url = authenticated_page.url
             except Exception:  # noqa: BLE001
@@ -110,11 +97,8 @@ class TestProject:
                 )
                 return
 
-            # /projects/<uuid>/issues = создан проект (плохо для теста)
-            # /projects или /projects/ = всё ок (нет нового проекта)
             new_project_url_pattern = "/projects/"
             url_path = current_url.split(settings.base_url)[-1]
-            # Ищем UUID-подобный сегмент после /projects/
             url_after_projects = url_path.split("/projects/")
             if len(url_after_projects) > 1:
                 tail = url_after_projects[1]
@@ -135,9 +119,6 @@ class TestProject:
     def test_tc011_projects_list_page_loads(
         self, authenticated_page: Page, step_logger: StepLogger
     ) -> None:
-        """Страница списка проектов /projects должна загружаться и
-        показывать UI: либо список существующих проектов,
-        либо empty-state с кнопкой Add Project."""
         project_page = ProjectPage(authenticated_page, step_logger)
         project_page.open_for_current_workspace()
 
@@ -162,9 +143,6 @@ class TestProject:
     def test_tc012_modal_open_close_lifecycle(
         self, authenticated_page: Page, step_logger: StepLogger
     ) -> None:
-        """Жизненный цикл модалки Add Project: open → close → open.
-        Это базовый UX-тест: пользователь должен иметь возможность
-        отменить создание и вернуться к нему."""
         project_page = ProjectPage(authenticated_page, step_logger)
         project_page.open_for_current_workspace()
 

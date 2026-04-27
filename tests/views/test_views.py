@@ -1,7 +1,8 @@
-"""Views test suite — TC-019..TC-021.
+"""
+Views test suite (TC-019..TC-021).
 
-Все тесты используют workspace-level страницу /<slug>/views
-вместо project-level (там тяжёлый рендер крашит Chromium).
+Covers workspace views section reachability, projects-as-view loading
+and the presence of interactive UI controls on the views page.
 """
 from __future__ import annotations
 
@@ -23,7 +24,6 @@ class TestViews:
     def test_tc019_views_section_loads(
         self, authenticated_page: Page, step_logger: StepLogger
     ) -> None:
-        """Workspace-level views страница должна открываться."""
         with allure.step("Navigate to workspace views"):
             views_url = (
                 f"{settings.base_url}/{settings.plane_workspace_slug}/views"
@@ -45,8 +45,6 @@ class TestViews:
     def test_tc020_projects_view_loads(
         self, authenticated_page: Page, step_logger: StepLogger
     ) -> None:
-        """Альтернативный view — список проектов (это тоже view).
-        Проверяем что URL /projects работает."""
         with allure.step("Navigate to projects list"):
             projects_url = (
                 f"{settings.base_url}/{settings.plane_workspace_slug}/projects"
@@ -67,7 +65,6 @@ class TestViews:
     def test_tc021_views_page_has_content(
         self, authenticated_page: Page, step_logger: StepLogger
     ) -> None:
-        """Views страница должна иметь интерактивные элементы UI."""
         with allure.step("Open workspace views"):
             views_url = (
                 f"{settings.base_url}/{settings.plane_workspace_slug}/views"

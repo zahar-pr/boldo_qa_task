@@ -1,9 +1,8 @@
-"""Auth test suite — TC-001..TC-005.
+"""
+Authentication test suite (TC-001..TC-005).
 
-Plane использует passwordless auth (OTP на email), поэтому:
-- Нет теста "login with valid password" — его и не может быть.
-- Тесты валидации формы email и проверки перехода на OTP-экран.
-- Логаут через storage_state в изолированном контексте.
+Covers email validation, OTP screen routing for registered and
+unregistered emails, and the logout flow that clears the session.
 """
 from __future__ import annotations
 
@@ -20,9 +19,6 @@ from src.pages.workspace_page import WorkspacePage
 @allure.epic("Plane SaaS")
 @allure.feature("Authentication")
 class TestAuth:
-    # ---------------------------------------------------------------
-    # TC-001: Login flow → OTP screen
-    # ---------------------------------------------------------------
     @allure.story("Login with valid email redirects to OTP screen")
     @allure.severity(allure.severity_level.CRITICAL)
     @pytest.mark.smoke
@@ -40,9 +36,7 @@ class TestAuth:
         with allure.step("Verify OTP screen appeared"):
             login.assert_otp_screen_visible()
 
-    # ---------------------------------------------------------------
-    # TC-002: Malformed email validation
-    # ---------------------------------------------------------------
+
     @allure.story("Login with malformed email keeps Continue button disabled")
     @allure.severity(allure.severity_level.CRITICAL)
     @pytest.mark.auth
@@ -50,14 +44,12 @@ class TestAuth:
     def test_tc002_malformed_email_blocks_submit(
             self, unauthenticated_page: Page, step_logger: StepLogger
     ) -> None:
-        """Plane валидирует email на клиенте и держит Continue disabled,
-        пока email не валиден по шаблону."""
         login = LoginPage(unauthenticated_page, step_logger)
         login.open()
 
         with allure.step("Fill invalid email 'abc-not-an-email'"):
             login.fill_email("abc-not-an-email")
-            unauthenticated_page.keyboard.press("Tab")  # blur-триггер
+            unauthenticated_page.keyboard.press("Tab")
 
         with allure.step("Assert Continue button is disabled"):
             login.assert_continue_button_disabled()
@@ -68,9 +60,6 @@ class TestAuth:
                 "OTP screen NOT shown for invalid email", passed=True
             )
 
-    # ---------------------------------------------------------------
-    # TC-003: Empty email — Continue disabled
-    # ---------------------------------------------------------------
     @allure.story("Empty email field disables Continue button")
     @allure.severity(allure.severity_level.NORMAL)
     @pytest.mark.auth
@@ -91,19 +80,12 @@ class TestAuth:
         with allure.step("Assert Continue button is disabled"):
             login.assert_continue_button_disabled()
 
-    # ---------------------------------------------------------------
-    # TC-004: Unregistered email → OTP screen (Plane не палит приватность)
-    # ---------------------------------------------------------------
     @allure.story("Unregistered email still proceeds to OTP (privacy by design)")
     @allure.severity(allure.severity_level.NORMAL)
     @pytest.mark.auth
     def test_tc004_unregistered_email_goes_to_otp(
         self, unauthenticated_page: Page, step_logger: StepLogger
     ) -> None:
-        """Plane намеренно не раскрывает, существует email или нет —
-        это защита от user enumeration атак. Оба варианта (зареган и нет)
-        идут на OTP-экран. Если Plane отдаст специфичную ошибку для
-        незареганного email — тест нужно будет пересмотреть."""
         login = LoginPage(unauthenticated_page, step_logger)
         login.open()
 
@@ -114,9 +96,7 @@ class TestAuth:
         with allure.step("Verify OTP screen shown (no user enumeration leak)"):
             login.assert_otp_screen_visible()
 
-    # ---------------------------------------------------------------
-    # TC-005: Logout clears session
-    # ---------------------------------------------------------------
+
     @allure.story("Logout clears session and redirects to login")
     @allure.severity(allure.severity_level.CRITICAL)
     @pytest.mark.smoke
@@ -137,15 +117,12 @@ class TestAuth:
             login = workspace.logout()
 
         with allure.step("Verify redirect to login form"):
-            # После logout Plane редиректит на /, где форма email.
             login.assert_email_input_visible()
 
         with allure.step("Verify session cookie is cleared"):
             cookies = page.context.cookies()
             session_cookies = [c for c in cookies if "session" in c["name"].lower()]
             step_logger.info(f"Session-like cookies after logout: {len(session_cookies)}")
-            # Plane может оставить пустой session cookie или удалить совсем.
-            # Проверяем что либо пусто, либо нет session cookie с реальным токеном.
             for c in session_cookies:
                 assert len(c.get("value", "")) < 50, (
                     f"Session cookie '{c['name']}' still has value "

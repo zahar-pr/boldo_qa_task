@@ -1,8 +1,8 @@
-"""Одноразовый скрипт: логинишься руками в Chromium, сохраняется сессия.
+"""
+One-time interactive script to capture a Plane session.
 
-Chromium на Linux требует флаги --no-sandbox/--disable-gpu/--disable-dev-shm-usage
-для стабильности на тяжёлых SPA. Плюс проверка свободной памяти — если меньше
-3 GB, выдаём предупреждение и дальше на усмотрение пользователя.
+Opens Chromium for manual OTP login, then persists cookies and localStorage
+to auth/storage_state.json so subsequent test runs can reuse the session.
 """
 from __future__ import annotations
 
@@ -15,7 +15,7 @@ sys.path.insert(0, str(ROOT))
 
 from playwright.sync_api import sync_playwright, TimeoutError as PWTimeout  # noqa: E402
 
-from src.helpers.config import settings  # noqa: E402
+from src.helpers.config import settings
 
 MANUAL_LOGIN_TIMEOUT_MS = 5 * 60 * 1000
 POLL_INTERVAL_MS = 500
@@ -23,7 +23,6 @@ MIN_FREE_RAM_GB = 3.0
 
 
 def check_system_resources() -> None:
-    """Проверяет свободную RAM. При недостатке — предупреждает но не падает."""
     try:
         import psutil  # type: ignore[import-not-found]
 
@@ -37,7 +36,6 @@ def check_system_resources() -> None:
             print("   Закрой браузер/IDE/Docker перед запуском.")
             input("   Нажми Enter чтобы продолжить всё равно (или Ctrl+C)...\n")
     except ImportError:
-        # psutil не обязателен — если нет, fallback на free -h если Linux
         if shutil.which("free"):
             import subprocess
 

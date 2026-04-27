@@ -1,9 +1,8 @@
-"""Фабрики тестовых данных.
+"""
+Faker-based factories for test data with autotest_ prefix.
 
-Правила:
-- Каждый объект имеет префикс `autotest_` — чтобы отличать от ручных в Plane.
-- Уникальный суффикс (uuid) — чтобы параллельные прогоны не конфликтовали.
-- Данные детерминируемы внутри одного теста (через seed), но уникальны между тестами.
+Each factory generates a unique entity (project, issue, page, cycle)
+prefixed with autotest_ + uuid suffix to keep runs isolated.
 """
 from __future__ import annotations
 
@@ -17,7 +16,6 @@ TEST_PREFIX = "autotest"
 
 
 def _uid() -> str:
-    """Короткий uuid — 8 символов. Достаточно для уникальности в рамках прогона."""
     return uuid.uuid4().hex[:8]
 
 

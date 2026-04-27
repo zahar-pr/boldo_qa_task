@@ -1,4 +1,9 @@
-"""Обёртки над allure API для единообразия в тестах."""
+"""
+Allure helpers for screenshots, HTML snapshots and test metadata.
+
+Used by the failure-capture hook in conftest.py and by individual tests
+that need to attach extra context to the Allure report.
+"""
 from __future__ import annotations
 
 import allure
@@ -6,7 +11,6 @@ from playwright.sync_api import Page
 
 
 def attach_screenshot(page: Page, name: str = "screenshot") -> None:
-    """Сделать скриншот и прикрепить к Allure отчёту."""
     try:
         png = page.screenshot(full_page=True)
         allure.attach(
@@ -17,7 +21,6 @@ def attach_screenshot(page: Page, name: str = "screenshot") -> None:
 
 
 def attach_page_html(page: Page, name: str = "page_html") -> None:
-    """Прикрепить HTML страницы — полезно при падении для дебага селекторов."""
     try:
         allure.attach(
             body=page.content(),
@@ -36,11 +39,6 @@ def set_allure_metadata(
     severity: str = "normal",
     tags: list[str] | None = None,
 ) -> None:
-    """Динамически проставить allure-метаданные из теста.
-
-    Вызывается в начале теста — удобно когда параметризуем и хотим разные
-    story/severity для разных кейсов.
-    """
     allure.dynamic.epic(epic)
     if feature:
         allure.dynamic.feature(feature)

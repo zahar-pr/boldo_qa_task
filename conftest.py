@@ -1,4 +1,10 @@
-"""Root conftest — глобальные фикстуры для всех тестов."""
+"""
+Global pytest fixtures and Playwright launch configuration.
+
+Defines authenticated/unauthenticated page fixtures, custom logger fixture,
+and the auto-capture hook that attaches screenshots and HTML snapshots
+to Allure on test failure.
+"""
 from __future__ import annotations
 
 import os
@@ -14,13 +20,12 @@ from playwright.sync_api import Browser, BrowserType, Page
 ROOT = Path(__file__).parent
 sys.path.insert(0, str(ROOT))
 
-from src.helpers.allure_utils import attach_page_html, attach_screenshot  # noqa: E402
-from src.helpers.config import settings  # noqa: E402
-from src.helpers.logger import StepLogger  # noqa: E402
+from src.helpers.allure_utils import attach_page_html, attach_screenshot
+from src.helpers.config import settings
+from src.helpers.logger import StepLogger
 
 
 def _kill_zombie_browsers() -> None:
-    """Убиваем зомби ТОЛЬКО Playwright-браузеров перед стартом сессии."""
     if os.name != "posix":
         return
     patterns = [
@@ -39,17 +44,16 @@ def _kill_zombie_browsers() -> None:
 
 
 def _check_ram_before_session() -> None:
-    """Проверяет свободную RAM. При <5GB предупреждает."""
     try:
-        import psutil  # type: ignore[import-not-found]
+        import psutil
     except ImportError:
         return
-    free_gb = psutil.virtual_memory().available / (1024**3)
+    free_gb = psutil.virtual_memory().available / (1024 ** 3)
     if free_gb < 5.0:
         print(
             f"\n{'=' * 70}\n"
-            f"⚠️  МАЛО RAM: свободно {free_gb:.1f} GB (нужно >5 GB)\n"
-            f"    Решение: pkill -f /opt/google/chrome\n"
+            f"⚠️  Low RAM: free {free_gb:.1f} GB (need >5 GB)\n"
+            f"    Solution: pkill -f /opt/google/chrome\n"
             f"             sudo swapoff -a && sudo swapon -a\n"
             f"{'=' * 70}\n"
         )
@@ -59,12 +63,10 @@ _kill_zombie_browsers()
 _check_ram_before_session()
 
 
-# ----- pytest-playwright overrides -----
 @pytest.fixture(scope="session")
 def browser_type_launch_args(
-    browser_type_launch_args: dict[str, Any], browser_name: str
+        browser_type_launch_args: dict[str, Any], browser_name: str
 ) -> dict[str, Any]:
-    """Launch args. Для chromium — флаги стабильности на Linux."""
     base: dict[str, Any] = {
         **browser_type_launch_args,
         "headless": settings.headless,
@@ -91,17 +93,9 @@ def browser_type_launch_args(
 
 @pytest.fixture(scope="function")
 def browser(
-    browser_type: BrowserType,
-    browser_type_launch_args: dict[str, Any],
+        browser_type: BrowserType,
+        browser_type_launch_args: dict[str, Any],
 ) -> Generator[Browser, None, None]:
-    """Свежий browser на каждый тест.
-
-    Override pytest-playwright дефолта (scope=session). На слабых машинах
-    под тяжёлыми SPA (Plane) session-scope браузер копит RAM: каждый
-    context +500MB, к 5-6 тесту краш Target crashed. Function-scope
-    browser освобождает RAM после каждого теста — стабильность важнее
-    скорости.
-    """
     browser = browser_type.launch(**browser_type_launch_args)
     yield browser
     browser.close()
@@ -109,9 +103,8 @@ def browser(
 
 @pytest.fixture(scope="function")
 def browser_context_args(
-    browser_context_args: dict[str, Any],
+        browser_context_args: dict[str, Any],
 ) -> dict[str, Any]:
-    """Параметры контекста: viewport + storage_state если есть."""
     args: dict[str, Any] = {
         **browser_context_args,
         "viewport": {"width": 1440, "height": 900},
@@ -123,10 +116,8 @@ def browser_context_args(
     return args
 
 
-# ----- Logger -----
 @pytest.fixture
 def step_logger(request: pytest.FixtureRequest) -> Generator[StepLogger, None, None]:
-    """Кастомный логгер для текущего теста."""
     test_name = request.node.name
     logger = StepLogger(test_name=test_name)
     logger.info(f"Test started: {test_name}")
@@ -138,16 +129,14 @@ def step_logger(request: pytest.FixtureRequest) -> Generator[StepLogger, None, N
         logger.close()
 
 
-# ----- Pages -----
 @pytest.fixture
 def authenticated_page(
-    page: Page, step_logger: StepLogger
+        page: Page, step_logger: StepLogger
 ) -> Generator[Page, None, None]:
-    """Страница с подгруженным storage_state (залогиненный юзер)."""
     if not settings.storage_state_full_path.exists():
         pytest.fail(
-            f"storage_state не найден: {settings.storage_state_full_path}\n"
-            f"Запусти: python scripts/save_auth_state.py"
+            f"storage_state not found: {settings.storage_state_full_path}\n"
+            f"Start: python scripts/save_auth_state.py"
         )
     step_logger.info(f"Using storage_state from {settings.storage_state_full_path}")
     yield page
@@ -155,9 +144,8 @@ def authenticated_page(
 
 @pytest.fixture
 def unauthenticated_page(
-    browser: Browser, step_logger: StepLogger
+        browser: Browser, step_logger: StepLogger
 ) -> Generator[Page, None, None]:
-    """Чистая страница БЕЗ storage_state."""
     context = browser.new_context(
         viewport={"width": 1440, "height": 900},
         ignore_https_errors=True,
@@ -172,10 +160,9 @@ def unauthenticated_page(
         context.close()
 
 
-# ----- Auto-capture при падении -----
 @pytest.hookimpl(hookwrapper=True, tryfirst=True)
 def pytest_runtest_makereport(
-    item: pytest.Item, call: pytest.CallInfo[None]
+        item: pytest.Item, call: pytest.CallInfo[None]
 ) -> Generator[None, Any, None]:
     outcome = yield
     report = outcome.get_result()
@@ -192,6 +179,5 @@ def pytest_runtest_makereport(
                 with allure.step("Auto-capture failure artifacts"):
                     attach_screenshot(page, name=f"failure_{item.name}")
                     attach_page_html(page, name=f"failure_html_{item.name}")
-            except Exception:  # noqa: BLE001
-                # Если страница уже умерла (Target crashed) — молча пропускаем
+            except Exception:
                 pass

@@ -1,8 +1,8 @@
-"""Сохранение сессии через Firefox.
+"""
+Firefox variant of the auth state saver.
 
-Firefox на Linux жрёт меньше RAM чем Chromium и имеет другой процессный pool.
-Storage_state совместим с Chromium и WebKit — это cookies + localStorage
-на стороне plane.so, браузеру индифферентны.
+Same purpose as save_auth_state.py but launches Firefox — useful when
+Chromium is unstable on the local machine.
 """
 from __future__ import annotations
 
@@ -54,8 +54,6 @@ def main() -> None:
             f">>> Как только увидит '/{settings.plane_workspace_slug}' — сохранит.\n"
         )
 
-        # Ручной polling вместо wait_for_url — надёжнее для SPA с быстрыми
-        # редиректами. Проверяем каждые 500мс содержит ли URL нужный slug.
         slug = settings.plane_workspace_slug
         elapsed = 0
         detected = False
@@ -69,7 +67,6 @@ def main() -> None:
             page.wait_for_timeout(POLL_INTERVAL_MS)
             elapsed += POLL_INTERVAL_MS
 
-            # Каждые 15 сек показываем прогресс
             if elapsed % 15_000 == 0:
                 print(f"   [{elapsed // 1000}s] current URL: {current_url}")
 

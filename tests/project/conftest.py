@@ -1,10 +1,8 @@
-"""Conftest для project-тестов.
+"""
+Project-suite fixtures.
 
-Фикстура `project_data` — генерирует уникальные данные для проекта
-с префиксом autotest_, чтобы тесты были изолированными.
-
-Cleanup делается best-effort: после теста пытаемся удалить созданный
-проект через UI. Если упало — оставляем мусор (потом руками почистим).
+Provides project_data factory that generates unique autotest_ entities
+for each test to keep them isolated.
 """
 from __future__ import annotations
 
@@ -17,5 +15,4 @@ from src.helpers.test_data import ProjectData
 
 @pytest.fixture
 def project_data() -> ProjectData:
-    """Уникальные данные для нового проекта."""
     return ProjectData()

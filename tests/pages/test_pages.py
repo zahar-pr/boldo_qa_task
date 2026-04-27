@@ -1,4 +1,9 @@
-"""Pages test suite — TC-024, TC-025."""
+"""
+Pages (wiki) test suite (TC-024..TC-025).
+
+Covers the workspace pages section reachability and the presence
+of interactive UI controls on the pages list.
+"""
 from __future__ import annotations
 
 import allure
@@ -18,8 +23,6 @@ class TestPages:
     def test_tc024_pages_section_loads(
         self, authenticated_page: Page, step_logger: StepLogger
     ) -> None:
-        """Workspace pages — wiki-подобный раздел. Должен открываться
-        через /<slug>/pages."""
         with allure.step("Navigate to workspace pages"):
             pages_url = (
                 f"{settings.base_url}/{settings.plane_workspace_slug}/pages"
@@ -42,9 +45,6 @@ class TestPages:
     def test_tc025_pages_section_has_content(
         self, authenticated_page: Page, step_logger: StepLogger
     ) -> None:
-        """На /pages должны быть либо кнопки создания, либо empty state,
-        либо список существующих pages — что-то что подтверждает что
-        раздел работает и в нём можно создавать pages."""
         with allure.step("Open workspace pages"):
             pages_url = (
                 f"{settings.base_url}/{settings.plane_workspace_slug}/pages"
@@ -53,10 +53,6 @@ class TestPages:
             authenticated_page.wait_for_timeout(3000)
 
         with allure.step("Verify pages section is interactive (has buttons)"):
-            # Pages section в любой реализации Plane имеет кнопки управления:
-            # либо "Add page", "New page", "Create page", либо переключатели
-            # типа Public/Private, либо empty state с CTA. Любой из вариантов
-            # = страница рендерится корректно.
             visible_buttons = authenticated_page.locator("button:visible").count()
             step_logger.info(f"Visible buttons on /pages: {visible_buttons}")
             assert visible_buttons >= 3, (
@@ -68,8 +64,6 @@ class TestPages:
             )
 
         with allure.step("Try finding any 'create page' or 'new page' control"):
-            # Best-effort поиск кнопок создания — для логирования/информации,
-            # не для assert (тест уже passed на предыдущем шаге).
             candidates = [
                 authenticated_page.get_by_role("button", name="Add page"),
                 authenticated_page.get_by_role("button", name="New page"),

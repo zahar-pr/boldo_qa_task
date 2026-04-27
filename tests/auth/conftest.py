@@ -1,10 +1,8 @@
-"""Локальный conftest для auth-тестов.
+"""
+Auth-suite fixtures.
 
-Зачем:
-- Для TC-005 logout нужна ОТДЕЛЬНАЯ копия storage_state.
-  Если использовать общий — logout выйдет из глобальной сессии и
-  все остальные тесты в прогоне начнут падать.
-- Решение: создаём изолированный контекст с СВОЕЙ копией storage.
+Provides isolated_authenticated_page used by destructive tests
+(such as logout) so they do not poison the shared session for other tests.
 """
 from __future__ import annotations
 
@@ -20,14 +18,9 @@ from src.helpers.config import settings
 def isolated_authenticated_page(
     browser: Browser,
 ) -> Generator[Page, None, None]:
-    """Страница с подгруженным storage_state в ИЗОЛИРОВАННОМ контексте.
-
-    Используется в logout-тесте: logout убьёт сессию этого контекста,
-    но storage_state.json на диске не тронем → остальные тесты работают.
-    """
     if not settings.storage_state_full_path.exists():
         pytest.fail(
-            "storage_state не найден. Запусти scripts/save_auth_state.py."
+            "storage_state not found. Start scripts/save_auth_state.py."
         )
 
     context = browser.new_context(

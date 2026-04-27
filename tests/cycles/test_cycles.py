@@ -1,8 +1,8 @@
-"""Cycles test suite — TC-022, TC-023.
+"""
+Cycles test suite (TC-022..TC-023).
 
-Используется workspace-level страница /<slug>/cycles вместо
-project-level /projects/<id>/cycles, так как страница проекта
-крашит Chromium на слабых машинах (тяжёлый initial render).
+Covers the workspace cycles section reachability and the presence
+of interactive UI on the cycles page.
 """
 from __future__ import annotations
 
@@ -23,7 +23,6 @@ class TestCycles:
     def test_tc022_cycles_section_loads(
         self, authenticated_page: Page, step_logger: StepLogger
     ) -> None:
-        """Workspace-level cycles страница должна открываться."""
         with allure.step("Navigate to workspace cycles"):
             cycles_url = (
                 f"{settings.base_url}/{settings.plane_workspace_slug}/cycles"
@@ -45,9 +44,6 @@ class TestCycles:
     def test_tc023_cycles_page_has_content(
         self, authenticated_page: Page, step_logger: StepLogger
     ) -> None:
-        """Cycles страница должна иметь интерактивный UI:
-        фильтры, переключатели, или empty state с CTA. Любой признак
-        что раздел работает."""
         with allure.step("Open workspace cycles"):
             cycles_url = (
                 f"{settings.base_url}/{settings.plane_workspace_slug}/cycles"

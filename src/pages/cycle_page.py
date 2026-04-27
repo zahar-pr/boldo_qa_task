@@ -1,4 +1,9 @@
-"""CyclePage — циклы/спринты в проекте."""
+"""
+Page Object for the Cycles (sprints) section.
+
+Covers cycle list rendering, Add Cycle button and basic cycle
+detail navigation used by the cycles test suite.
+"""
 from __future__ import annotations
 
 from playwright.sync_api import Locator
@@ -12,7 +17,6 @@ class CyclePage(BasePage):
 
     @property
     def cycles_nav_link(self) -> Locator:
-        """Ссылка на циклы внутри проекта (sidebar под проектом)."""
         return self.page.get_by_text("Cycles", exact=True).first
 
     @property

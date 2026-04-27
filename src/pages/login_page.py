@@ -1,13 +1,8 @@
-"""LoginPage — страница входа в Plane.
+"""
+Page Object for the Plane login screen.
 
-Особенность Plane: passwordless auth.
-1. Вводим email -> нажимаем Continue -> попадаем на экран OTP.
-2. Вводим 6-значный код из email -> Continue -> попадаем в workspace.
-
-Для автотестов логин через OTP пропускается (см. auth fixture со storage_state).
-Эта страница используется для:
-- Тестов валидации формы (empty email, invalid email).
-- Единичного теста логина с ручным вводом OTP (если понадобится).
+Encapsulates the email field, OTP input and Continue button along with
+submit and assertion helpers used by authentication tests.
 """
 from __future__ import annotations
 
@@ -34,10 +29,6 @@ class LoginPage(BasePage):
 
     @property
     def error_toast(self) -> Locator:
-        """Тост с ошибкой валидации/авторизации. Plane обычно показывает
-        сообщения под инпутом или через toast. Точный селектор уточним
-        при прогоне тестов."""
-        # Общий паттерн: элемент с role="alert" или текст с красным цветом.
         return self.page.locator('[role="alert"], [class*="error"]').first
 
     # --- Actions ---
@@ -52,7 +43,6 @@ class LoginPage(BasePage):
         return self
 
     def submit_email(self, email: str) -> "LoginPage":
-        """Заполнить email и нажать Continue (без ввода OTP)."""
         self.fill_email(email)
         self.click_continue()
         return self
@@ -64,14 +54,12 @@ class LoginPage(BasePage):
 
     # --- Assertions ---
     def assert_otp_screen_visible(self) -> None:
-        """После ввода email мы должны оказаться на экране ввода OTP."""
         self.assert_visible(self.otp_input, name="OTP input")
 
     def assert_email_input_visible(self) -> None:
         self.assert_visible(self.email_input, name="Email input")
 
     def assert_continue_button_disabled(self) -> None:
-        """При пустом email кнопка Continue должна быть disabled."""
         is_disabled = self.continue_button.is_disabled()
         self.log.assertion("Continue button is disabled", passed=is_disabled)
         if not is_disabled:

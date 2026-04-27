@@ -1,4 +1,9 @@
-"""ListViewPage — список issues в виде таблицы (List view)."""
+"""
+Page Object for the project List view.
+
+Encapsulates the list-mode toggle and row-level selectors for tests
+that verify the layout switcher and inline row interactions.
+"""
 from __future__ import annotations
 
 from playwright.sync_api import Locator

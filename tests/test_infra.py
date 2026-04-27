@@ -1,6 +1,8 @@
-"""Smoke-тест инфраструктуры. Не ходит в Plane — просто проверяет сборку.
+"""
+Infrastructure smoke tests for the framework itself.
 
-Запуск: pytest tests/test_infra.py -v
+Verifies that config loads, the logger writes and closes, test data
+factories produce unique values and Allure utility helpers are callable.
 """
 from __future__ import annotations
 
@@ -13,7 +15,7 @@ from src.helpers.test_data import IssueData, ProjectData
 class TestInfrastructure:
     def test_config_loads(self) -> None:
         assert settings.base_url.startswith("http")
-        assert settings.plane_email  # .env заполнен
+        assert settings.plane_email  # .env is filled
         assert settings.plane_workspace_slug
 
     def test_logger_writes_and_closes(self, tmp_path) -> None:
@@ -43,7 +45,6 @@ class TestInfrastructure:
         assert i1.title.startswith("autotest_issue_")
 
     def test_allure_metadata_callable(self) -> None:
-        # Не проверяем эффект, только что функция не падает
         set_allure_metadata(
             feature="Infra",
             story="smoke",
