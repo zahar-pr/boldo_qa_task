@@ -6,12 +6,18 @@
 *Python · Playwright · Allure · GitHub Actions*
 
 
-[![Allure Report](https://img.shields.io/badge/Allure-Report-blue?logo=qmeta&logoColor=white)]
-https://zahar-pr.github.io/boldo_qa_task/
+<div align="center">
+
+[![CI](https://github.com/zahar-pr/boldo_qa_task/actions/workflows/tests.yaml/badge.svg)](https://github.com/zahar-pr/boldo_qa_task/actions/workflows/tests.yaml)
+[![Allure Report](https://img.shields.io/badge/Allure-Live%20Dashboard-blueviolet?logo=qameta&logoColor=white)](https://zahar-pr.github.io/boldo_qa_task/)
 [![Python](https://img.shields.io/badge/python-3.10+-blue?logo=python&logoColor=white)](https://www.python.org/)
 [![Playwright](https://img.shields.io/badge/Playwright-1.49-2EAD33?logo=playwright&logoColor=white)](https://playwright.dev/python/)
-[![CI](https://github.com/zahar-pr/boldo_qa_task/actions/workflows/tests.yaml/badge.svg)](https://github.com/zahar-pr/boldo_qa_task/actions/workflows/tests.yaml)
+[![Tests](https://img.shields.io/badge/tests-30%20passing-success?logo=pytest&logoColor=white)](https://zahar-pr.github.io/boldo_qa_task/)
+[![License](https://img.shields.io/badge/license-MIT-lightgrey)](./LICENSE)
 
+### 📊 [Open Live Allure Dashboard →](https://zahar-pr.github.io/boldo_qa_task/)
+
+</div>
 </div>
 
 ---
