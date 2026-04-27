@@ -91,11 +91,17 @@ def browser_type_launch_args(
     return base
 
 
-@pytest.fixture(scope="function")
+@pytest.fixture(scope="session")
 def browser(
-        browser_type: BrowserType,
-        browser_type_launch_args: dict[str, Any],
+    browser_type: BrowserType,
+    browser_type_launch_args: dict[str, Any],
 ) -> Generator[Browser, None, None]:
+    """Session-scope browser for CI speed.
+
+    Locally (weak machines) we used function-scope to prevent RAM
+    accumulation crash on heavy SPAs. CI has clean Ubuntu 22.04 with
+    plenty of RAM — session-scope is 5x faster.
+    """
     browser = browser_type.launch(**browser_type_launch_args)
     yield browser
     browser.close()
