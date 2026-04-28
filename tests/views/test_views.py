@@ -5,11 +5,9 @@ Covers workspace views section reachability, projects-as-view loading
 and the presence of interactive UI controls on the views page.
 """
 from __future__ import annotations
-
 import allure
 import pytest
 from playwright.sync_api import Page, expect
-
 from src.helpers.config import settings
 from src.helpers.logger import StepLogger
 
