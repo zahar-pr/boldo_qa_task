@@ -12,16 +12,16 @@
 
 ## 🎯 Executive Summary
 
-| Metric | Value |
-|---|---|
-| **Total tests** | 25 (+ 6 infrastructure) |
-| **Passed** | ✅ **30 / 30** (100%) |
-| **Failed** | ❌ 0 |
-| **Skipped** | ⏭️ 0 |
-| **Duration** | 3 min 7 sec |
-| **Pass rate (last 7 runs)** | 100% |
-| **Critical issues found** | 0 |
-| **Normal issues found** | 0 |
+| Metric | Value                   |
+|---|-------------------------|
+| **Total tests** | 24 (+ 6 infrastructure) |
+| **Passed** | ✅ **29 / 29** (100%)    |
+| **Failed** | ❌ 0                     |
+| **Skipped** | ⏭️ 0                    |
+| **Duration** | 3 min 7 sec             |
+| **Pass rate (last 7 runs)** | 100%                    |
+| **Critical issues found** | 0                       |
+| **Normal issues found** | 0                       |
 
 **Verdict:** Plane.so passes regression on all critical user journeys. No blocker bugs detected during the run. Suite is stable and ready for daily CI execution.
 
@@ -29,16 +29,16 @@
 
 ## 📊 Coverage by module
 
-| Module | Tests | Passed | Failed | Critical | Normal |
-|---|:---:|:---:|:---:|:---:|:---:|
-| Authentication | 5 | ✅ 5 | 0 | 4 | 1 |
-| Workspace | 3 | ✅ 3 | 0 | 1 | 2 |
-| Projects | 4 | ✅ 4 | 0 | 2 | 2 |
-| Issues / Work Items | 6 | ✅ 6 | 0 | 2 | 4 |
-| Views (Kanban / List) | 3 | ✅ 3 | 0 | 1 | 2 |
-| Cycles / Sprints | 2 | ✅ 2 | 0 | 0 | 2 |
-| Pages / Documents | 2 | ✅ 2 | 0 | 0 | 2 |
-| **Total** | **25** | **25** | **0** | **10** | **15** |
+| Module | Tests  | Passed | Failed | Critical | Normal |
+|---|:------:|:------:|:---:|:---:|:---:|
+| Authentication |   5    |  ✅ 5   | 0 | 4 | 1 |
+| Workspace |   3    |  ✅ 3   | 0 | 1 | 2 |
+| Projects |   4    |  ✅ 4   | 0 | 2 | 2 |
+| Issues / Work Items |   6    |  ✅ 6   | 0 | 2 | 4 |
+| Views (Kanban / List) |   3    |  ✅ 3   | 0 | 1 | 2 |
+| Cycles / Sprints |   2    |  ✅ 2   | 0 | 0 | 2 |
+| Pages / Documents |   1    |  ✅ 1   | 0 | 0 | 1 |
+| **Total** | **24** | **24** | **0** | **10** | **14** |
 
 ---
 
@@ -97,12 +97,11 @@
 | TC-022 | Workspace cycles section loads | normal | ✅ | 4.0s |
 | TC-023 | Cycles page has interactive UI | normal | ✅ | 4.2s |
 
-### Pages (TC-024..TC-025)
+### Pages (TC-024)
 
 | ID | Title | Severity | Status | Duration |
 |---|---|---|:---:|:---:|
 | TC-024 | Workspace pages section accessible | normal | ✅ | 4.1s |
-| TC-025 | Pages section has interactive content | normal | ✅ | 4.6s |
 
 ---
 

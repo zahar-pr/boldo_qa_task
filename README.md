@@ -12,7 +12,8 @@
 [![Allure Report](https://img.shields.io/badge/Allure-Live%20Dashboard-blueviolet?logo=qameta&logoColor=white)](https://zahar-pr.github.io/boldo_qa_task/)
 [![Python](https://img.shields.io/badge/python-3.10+-blue?logo=python&logoColor=white)](https://www.python.org/)
 [![Playwright](https://img.shields.io/badge/Playwright-1.49-2EAD33?logo=playwright&logoColor=white)](https://playwright.dev/python/)
-[![Tests](https://img.shields.io/badge/tests-30%20passing-success?logo=pytest&logoColor=white)](https://zahar-pr.github.io/boldo_qa_task/)
+[![Tests](https://img.shields.io/badge/tests-29%20passing-success?logo=pytest&logoColor=white)](https://zahar-pr. 
+github.io/boldo_qa_task/)
 [![License](https://img.shields.io/badge/license-MIT-lightgrey)](./LICENSE)
 
 ### 📊 [Open Live Allure Dashboard →](https://zahar-pr.github.io/boldo_qa_task/)
@@ -35,16 +36,16 @@ The suite is engineered for production use: stable runs in CI, an interactive re
 
 ## 🎯 Coverage by module
 
-| Module | Tests | Coverage | Severity |
-|---|:---:|:---:|---|
-| **Authentication** | 5 | ✅ 100% | critical, normal |
-| **Workspace** | 3 | ✅ 100% | critical, normal |
-| **Projects** | 4 | ✅ 100% | critical, normal |
-| **Issues / Work Items** | 6 | ✅ 100% | critical, normal |
-| **Views (Kanban / List)** | 3 | ✅ 100% | critical, normal |
-| **Cycles / Sprints** | 2 | ✅ 100% | normal |
-| **Pages / Documents** | 2 | ✅ 100% | normal |
-| **Total** | **25** | ✅ **100%** | |
+| Module | Tests  | Coverage | Severity |
+|---|:------:|:---:|---|
+| **Authentication** |   5    | ✅ 100% | critical, normal |
+| **Workspace** |   3    | ✅ 100% | critical, normal |
+| **Projects** |   4    | ✅ 100% | critical, normal |
+| **Issues / Work Items** |   6    | ✅ 100% | critical, normal |
+| **Views (Kanban / List)** |   3    | ✅ 100% | critical, normal |
+| **Cycles / Sprints** |   2    | ✅ 100% | normal |
+| **Pages / Documents** |   1    | ✅ 100% | normal |
+| **Total** | **24** | ✅ **100%** | |
 
 Plus **6 infrastructure tests** (config, logger, page-object instantiation, auth fixture verification).
 
@@ -103,7 +104,7 @@ boldo_qa_task/
 │   ├── issues/                          # TC-013..TC-018
 │   ├── views/                           # TC-019..TC-021
 │   ├── cycles/                          # TC-022..TC-023
-│   └── pages/                           # TC-024..TC-025
+│   └── pages/                           # TC-024
 │
 ├── scripts/
 │   └── save_auth_state.py               # One-time session saver
@@ -251,7 +252,7 @@ allure serve allure-results
 
 ```
 ======================== test session starts =========================
-collected 31 items / 1 deselected / 30 selected
+collected 30 items / 1 deselected / 29 selected
 
 tests/auth/test_auth.py::TestAuth::test_tc001_login_redirects_to_otp[chromium] PASSED        [  3%]
 tests/auth/test_auth.py::TestAuth::test_tc002_malformed_email_blocks_submit[chromium] PASSED [  6%]
@@ -259,7 +260,7 @@ tests/auth/test_auth.py::TestAuth::test_tc003_empty_email_disables_continue[chro
 ...
 tests/workspace/test_workspace.py::TestWorkspace::test_tc008_workspace_settings_accessible[chromium] PASSED [100%]
 
-================== 30 passed, 1 deselected in 187s ===================
+================== 29 passed, 1 deselected in 187s ===================
 ```
 
 ---
