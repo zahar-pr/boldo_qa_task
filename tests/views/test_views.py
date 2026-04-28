@@ -4,6 +4,7 @@ Views test suite (TC-019..TC-021).
 Covers workspace views section reachability, projects-as-view loading
 and the presence of interactive UI controls on the views page.
 """
+
 from __future__ import annotations
 import allure
 import pytest
