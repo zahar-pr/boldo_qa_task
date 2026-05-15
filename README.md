@@ -185,7 +185,7 @@ Every test is annotated:
 ```
 
 This enables filtering by severity / tags / features in the dashboard.
-
+ 
 ---
 
 ## 🚀 Quick start
